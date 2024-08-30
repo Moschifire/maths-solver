@@ -23,12 +23,11 @@ export const ProblemInput = ({ problemType, onSolve }) => {
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter equations separated by commas"
+          placeholder="Enter equations separated by commas, e.g., 2x+y=4, 2x+4y=8"
         />
       )}
       {problemType === "Quadratic Equations" && (
-        <input
-          type="text"
+        <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Enter a quadratic equation, e.g., 2x^2 - 4x - 6 = 0"

@@ -56,9 +56,6 @@ const parseSimultaneousEquations = (input) => {
       const coefB = parseFloat(b);
       const coefC = parseFloat(c);
 
-      // Log parsed coefficients
-      console.log(`Equation ${index + 1}: a=${coefA}, b=${coefB}, c=${coefC}`);
-
       matrixA.push([coefA, coefB]);
       matrixB.push(coefC);
     } else {
@@ -66,9 +63,6 @@ const parseSimultaneousEquations = (input) => {
       throw new Error(`Invalid equation format in equation ${index + 1}`);
     }
   });
-
-  console.log("Matrix A:", matrixA);
-  console.log("Matrix B:", matrixB);
 
   return { matrixA, matrixB };
 };
@@ -81,15 +75,8 @@ const solveSimultaneousEquations = (input) => {
     const mathMatrixA = matrix(matrixA);
     const mathMatrixB = matrix(matrixB);
 
-    // Log the matrices being solved
-    console.log("Solving Matrix A:", mathMatrixA);
-    console.log("Solving Matrix B:", mathMatrixB);
-
     // Solve the equations
     const result = lusolve(mathMatrixA, mathMatrixB);
-
-    // Log the raw result from lusolve
-    console.log("Raw Solution:", result);
 
     // Extract solutions
     const solutions = result
@@ -99,19 +86,29 @@ const solveSimultaneousEquations = (input) => {
     // Join solutions into a string
     return solutions.join(", ");
   } catch (error) {
-    console.error("Solver Error:", error);
     return "Error in solving the problem. Please check your input format.";
   }
 };
 
-// Test the function with a sample input
-const input = "2x + 3y = 5, 4x - y = 2";
-const solution = solveSimultaneousEquations(input);
-console.log(solution); // Should output: "x = ..., y = ..."
+const parseQuadraticEquation = (input) => {
+  const match = input.match(
+    /([+-]?\d*)x\^2\s*([+-]?\d*)x\s*([+-]?\d*)\s*=\s*0/
+  );
 
-/* const solveQuadraticEquation = (input) => {
-  // Example input: "ax^2 + bx + c = 0"
-  const [a, b, c] = [1, -3, 2]; // Extract coefficients from input
+  if (match) {
+    const [, a, b, c] = match;
+    return {
+      a: parseFloat(a || 1),
+      b: parseFloat(b || 0),
+      c: parseFloat(c || 0),
+    };
+  }
+
+  throw new Error("Invalid quadratic equation format");
+};
+
+const solveQuadraticEquation = (input) => {
+  const { a, b, c } = parseQuadraticEquation(input);
 
   const discriminant = Math.pow(b, 2) - 4 * a * c;
   if (discriminant < 0) return "No real roots";
@@ -120,6 +117,6 @@ console.log(solution); // Should output: "x = ..., y = ..."
   const root2 = (-b - Math.sqrt(discriminant)) / (2 * a);
 
   return `Roots are: x1 = ${root1}, x2 = ${root2}`;
-}; */
+};
 
 export default ProblemSolver;
