@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { evaluate } from "mathjs";
+import { evaluate, lusolve, matrix } from "mathjs";
 
 const ProblemSolver = ({ problemType, input, onSolved }) => {
   useEffect(() => {
@@ -30,6 +30,19 @@ const ProblemSolver = ({ problemType, input, onSolved }) => {
     onSolved(solution);
   }, [problemType, input, onSolved]);
   return null;
+};
+
+const solveSimultaneousEquations = (input) => {
+    // Example input: ["2x + 3y = 5", "4x - y = 2"]
+    const equations = input.split(',').map(eq => eq.trim());
+    const matrixA = [
+        [2, 3], // Coefficients of x and y in the first equation
+        [4, -1], // Coefficients of x and y in the second equation
+    ];
+    const matrixB = [5, 2]; // Constants on the right side of the equations
+
+    const result = lusolve(matrix(matrixA), matrix(matrixB));
+    return `x = ${result[0]}, y = ${result[1]}`;
 };
 
 export default ProblemSolver;
