@@ -3,6 +3,7 @@ import "./App.css";
 import ProblemTypeSelector from "./ProblemTypeSelector";
 import { ProblemInput } from "./ProblemInput";
 import ProblemSolver from "./ProblemSolver";
+import Solution from "./Solution";
 
 function App() {
   const [problemType, setProblemType] = useState("Basic Operations");
@@ -14,7 +15,12 @@ function App() {
       <h1>Maths Solver</h1>
       <ProblemTypeSelector onSelectType={setProblemType} />
       <ProblemInput problemType={problemType} onSolve={setInput} />
-      <ProblemSolver problemType={problemType} input={input} onSolved={setSolution} />
+      <ProblemSolver
+        problemType={problemType}
+        input={input}
+        onSolved={setSolution}
+      />
+      <Solution solution={solution} />
     </div>
   );
 }
