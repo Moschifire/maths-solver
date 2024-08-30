@@ -34,7 +34,6 @@ export const ProblemInput = ({ problemType, onSolve }) => {
           placeholder="Enter a quadratic equation, e.g., 2x^2 - 4x - 6 = 0"
         />
       )}
-      <button type="submit">Solve</button>
       {/* Add more cases for other problem types */}
       <button type="submit">Solve</button>
     </form>
