@@ -23,6 +23,9 @@ export const ProblemInput = ({ problemType, onSolve }) => {
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          style={{ width: "300px", height: "auto" }}
+          rows="2"
+          cols="30"
           placeholder="Enter equations separated by commas, e.g., 2x+y=4, 2x+4y=8"
         />
       )}
@@ -30,7 +33,10 @@ export const ProblemInput = ({ problemType, onSolve }) => {
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter a quadratic equation, e.g., 2x^2 - 4x - 6 = 0"
+          style={{ width: "300px", height: "auto" }}
+          rows="2"
+          cols="30"
+          placeholder="Enter a quadratic equation, e.g., 2x^2-4x-6=0"
         />
       )}
       {/* Add more cases for other problem types */}
