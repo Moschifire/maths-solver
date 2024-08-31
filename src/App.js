@@ -12,15 +12,17 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Eureka!</h1>
-      <ProblemTypeSelector onSelectType={setProblemType} />
-      <ProblemInput problemType={problemType} onSolve={setInput} />
-      <ProblemSolver
-        problemType={problemType}
-        input={input}
-        onSolved={setSolution}
-      />
-      <Solution solution={solution} />
+      <div className="MainApp">
+        <h1>Eureka!</h1>
+        <ProblemTypeSelector onSelectType={setProblemType} />
+        <ProblemInput problemType={problemType} onSolve={setInput} />
+        <ProblemSolver
+          problemType={problemType}
+          input={input}
+          onSolved={setSolution}
+        />
+        <Solution solution={solution} />
+      </div>
     </div>
   );
 }
