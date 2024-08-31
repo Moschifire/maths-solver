@@ -15,8 +15,8 @@ const ProblemSolver = ({ problemType, input, onSolved }) => {
         case "Quadratic Equations":
           solution = solveQuadraticEquation(input);
           break;
-        case "Simplify Single Surd":
-          solution = simplifySingleSurd(input);
+        case "Surds":
+          solution = solveSurds(input);
           break;
         default:
           solution = "Invalid problem type";
@@ -118,44 +118,47 @@ const solveQuadraticEquation = (input) => {
   return `Roots are: x1 = ${root1}, x2 = ${root2}`;
 };
 
-// Simplify Single Surd
-const simplifySingleSurd = (input) => {
-  // Parsing and simplification logic goes here
-  // For simplicity, let's assume the expression is in a very basic form
-  // like "2√8 + √18 - √2"
+// Solve Surds
+const solveSurds = (input) => {
+  // Split the expression into parts by "+" and "-"
+  const parts = input.split(/(?=[+-])/);
 
-  const parts = input.split(/(?=\+|\-)/); // Split by "+" or "-" while keeping them in the array
+  // Object to store the sum of like surds
+  const surdTerms = {};
 
-  const simplifiedParts = parts.map((part) => {
+  parts.forEach((part) => {
     // Extract the coefficient and radicand
-    const match = part.match(/(-?\d*)√(\d+)/);
+    const match = part.match(/([+-]?\d*)√(\d+)/);
     if (match) {
-      let coefficient = match[1] ? parseInt(match[1]) : 1;
+      let coefficient = match[1]
+        ? parseInt(match[1])
+        : match[0][0] === "-"
+        ? -1
+        : 1;
       const radicand = parseInt(match[2]);
 
-      // Simplify the radicand (for example, √8 = 2√2)
+      // Simplify the radicand
       const [simplifiedCoefficient, simplifiedRadicand] =
         simplifyRadicand(radicand);
 
-      // Combine the original coefficient with the simplified coefficient
-      coefficient *= simplifiedCoefficient;
-
-      // Return the simplified surd
-      if (simplifiedRadicand === 1) {
-        return `${coefficient}`;
-      }
-      return `${coefficient}√${simplifiedRadicand}`;
+      // Combine coefficients of like surds
+      const key = `√${simplifiedRadicand}`;
+      surdTerms[key] =
+        (surdTerms[key] || 0) + coefficient * simplifiedCoefficient;
     }
-
-    // If part is not a surd, return it unchanged
-    return part;
   });
 
-  // Combine simplified parts back into a string
-  return simplifiedParts.join(" ");
+  // Construct the simplified expression
+  const result = Object.entries(surdTerms)
+    .map(([key, value]) =>
+      value === 1 ? key : value === -1 ? `-${key}` : `${value}${key}`
+    )
+    .join(" + ")
+    .replace(/\+ -/g, "- ");
+
+  return result || "0"; // If result is empty, return '0'
 };
 
-// Function to simplify the radicand
 function simplifyRadicand(n) {
   // Find the largest perfect square factor of n
   for (let i = Math.floor(Math.sqrt(n)); i > 1; i--) {
