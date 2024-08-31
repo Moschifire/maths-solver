@@ -39,7 +39,7 @@ export const ProblemInput = ({ problemType, onSolve }) => {
           placeholder="Enter a quadratic equation (e.g., 2x^2-4x-6=0)"
         />
       )}
-      {problemType === "Surds" && (
+      {problemType === "Simplify Surds" && (
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -47,6 +47,16 @@ export const ProblemInput = ({ problemType, onSolve }) => {
           rows="2"
           cols="30"
           placeholder="Enter surd expression (e.g., 2√16 or 2√4 + 3√4)"
+        />
+      )}
+      {problemType === "Rationalize and Simplify Surds" && (
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          style={{ width: "300px", height: "auto" }}
+          rows="2"
+          cols="30"
+          placeholder="Enter surd expression (e.g., 1/√2 or 1/(√2 + √3))"
         />
       )}
       {/* Add more cases for other problem types */}

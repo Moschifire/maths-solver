@@ -15,8 +15,11 @@ const ProblemSolver = ({ problemType, input, onSolved }) => {
         case "Quadratic Equations":
           solution = solveQuadraticEquation(input);
           break;
-        case "Surds":
-          solution = solveSurds(input);
+        case "Simplify Surds":
+          solution = simplifySurds(input);
+          break;
+        case "Rationalize and Simplify Surds":
+          solution = rationalizeAndSimplify(input);
           break;
         default:
           solution = "Invalid problem type";
@@ -118,8 +121,8 @@ const solveQuadraticEquation = (input) => {
   return `Roots are: x1 = ${root1}, x2 = ${root2}`;
 };
 
-// Solve Surds
-const solveSurds = (input) => {
+// Simplify Surds
+const simplifySurds = (input) => {
   // Split the expression into parts by "+" and "-"
   const parts = input.split(/(?=[+-])/);
 
@@ -159,7 +162,7 @@ const solveSurds = (input) => {
   return result || "0"; // If result is empty, return '0'
 };
 
-function simplifyRadicand(n) {
+const simplifyRadicand = (n) => {
   // Find the largest perfect square factor of n
   for (let i = Math.floor(Math.sqrt(n)); i > 1; i--) {
     if (n % (i * i) === 0) {
@@ -167,6 +170,84 @@ function simplifyRadicand(n) {
     }
   }
   return [1, n]; // If no simplification is possible
-}
+};
+
+const rationalizeSurd = (input) => {
+  // Step 1: Match and parse the numerator and denominator
+  const match = input.match(/(\d*√?\d*)\/(\(?.*\)?)/);
+  if (!match) return input; // If no match, return the expression as-is
+
+  let numerator = match[1] || "1";
+  const denominator = match[2].replace(/[()]/g, ""); // Remove parentheses if any
+
+  // Step 2: Check if the denominator is a simple surd or a binomial expression
+  const simpleSurdMatch = denominator.match(/^√(\d+)$/);
+  const complexSurdMatch = denominator.match(/^(√\d+)([+-])(√\d+)$/);
+
+  if (simpleSurdMatch) {
+    // Case 1: Denominator is a simple surd (e.g., 1/√2)
+    const radicand = parseInt(simpleSurdMatch[1]);
+    const newNumerator = `${numerator}√${radicand}`;
+    const newDenominator = radicand;
+    return `${newNumerator}/${newDenominator}`;
+  } else if (complexSurdMatch) {
+    // Case 2: Denominator is a binomial surd expression (e.g., 1/(√2 + √3))
+    const [_, firstTerm, operator, secondTerm] = complexSurdMatch;
+    const conjugate =
+      operator === "+"
+        ? `${firstTerm}-${secondTerm}`
+        : `${firstTerm}+${secondTerm}`;
+
+    // Multiply numerator by the conjugate
+    const newNumerator = `${numerator}(${conjugate})`;
+
+    // Use difference of squares to simplify denominator
+    const firstRadicand = parseInt(firstTerm.match(/\d+/)[0]);
+    const secondRadicand = parseInt(secondTerm.match(/\d+/)[0]);
+    const newDenominator = firstRadicand - secondRadicand;
+
+    return `${newNumerator}/${newDenominator}`;
+  }
+
+  // Step 3: Handle more complex cases or return original if not handled
+  return input;
+};
+
+// Utility function to simplify a term like "2√2 + 3√2"
+const simplifyExpression = (input) => {
+  const parts = input.split(/(?=[+-])/);
+  const termMap = {};
+
+  parts.forEach((part) => {
+    const match = part.match(/([+-]?\d*)√(\d+)/);
+    if (match) {
+      const coefficient = match[1]
+        ? parseInt(match[1])
+        : part[0] === "-"
+        ? -1
+        : 1;
+      const radicand = parseInt(match[2]);
+
+      termMap[radicand] = (termMap[radicand] || 0) + coefficient;
+    } else {
+      termMap["constant"] = (termMap["constant"] || 0) + parseInt(part);
+    }
+  });
+
+  return Object.entries(termMap)
+    .map(([key, value]) =>
+      key === "constant"
+        ? value
+        : `${value > 1 || value < -1 ? value : ""}√${key}`
+    )
+    .join(" + ")
+    .replace(/\+ -/g, "- ");
+};
+
+// Rationalize and simplify a complex expression
+const rationalizeAndSimplify = (input) => {
+  const rationalized = rationalizeSurd(input);
+  return simplifyExpression(rationalized);
+};
 
 export default ProblemSolver;

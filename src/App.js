@@ -12,7 +12,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Maths Solver</h1>
+      <h1>Eureka!</h1>
       <ProblemTypeSelector onSelectType={setProblemType} />
       <ProblemInput problemType={problemType} onSolve={setInput} />
       <ProblemSolver

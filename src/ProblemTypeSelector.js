@@ -5,7 +5,8 @@ const ProblemTypeSelector = ({ onSelectType }) => {
     "Basic Operations",
     "Simultaneous Equations",
     "Quadratic Equations",
-    "Surds",
+    "Simplify Surds",
+    "Rationalize and Simplify Surds",
   ];
   return (
     <select onChange={(e) => onSelectType(e.target.value)}>
