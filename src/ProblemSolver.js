@@ -15,11 +15,8 @@ const ProblemSolver = ({ problemType, input, onSolved }) => {
         case "Quadratic Equations":
           solution = solveQuadraticEquation(input);
           break;
-        case "Surds":
-          solution = evaluate(input);
-          break;
-        case "Calculus":
-          solution = solveCalculus(input);
+        case "Simplify Single Surd":
+          solution = simplifySingleSurd(input);
           break;
         default:
           solution = "Invalid problem type";
@@ -32,6 +29,7 @@ const ProblemSolver = ({ problemType, input, onSolved }) => {
   return null;
 };
 
+// Simultaneous Equation Solver
 // Parsing Function
 const parseSimultaneousEquations = (input) => {
   const equations = input.split(",").map((eq) => eq.trim());
@@ -90,6 +88,7 @@ const solveSimultaneousEquations = (input) => {
   }
 };
 
+// Quadratic Equation solver
 const parseQuadraticEquation = (input) => {
   const match = input.match(
     /([+-]?\d*)x\^2\s*([+-]?\d*)x\s*([+-]?\d*)\s*=\s*0/
@@ -118,5 +117,53 @@ const solveQuadraticEquation = (input) => {
 
   return `Roots are: x1 = ${root1}, x2 = ${root2}`;
 };
+
+// Simplify Single Surd
+const simplifySingleSurd = (input) => {
+  // Parsing and simplification logic goes here
+  // For simplicity, let's assume the expression is in a very basic form
+  // like "2√8 + √18 - √2"
+
+  const parts = input.split(/(?=\+|\-)/); // Split by "+" or "-" while keeping them in the array
+
+  const simplifiedParts = parts.map((part) => {
+    // Extract the coefficient and radicand
+    const match = part.match(/(-?\d*)√(\d+)/);
+    if (match) {
+      let coefficient = match[1] ? parseInt(match[1]) : 1;
+      const radicand = parseInt(match[2]);
+
+      // Simplify the radicand (for example, √8 = 2√2)
+      const [simplifiedCoefficient, simplifiedRadicand] =
+        simplifyRadicand(radicand);
+
+      // Combine the original coefficient with the simplified coefficient
+      coefficient *= simplifiedCoefficient;
+
+      // Return the simplified surd
+      if (simplifiedRadicand === 1) {
+        return `${coefficient}`;
+      }
+      return `${coefficient}√${simplifiedRadicand}`;
+    }
+
+    // If part is not a surd, return it unchanged
+    return part;
+  });
+
+  // Combine simplified parts back into a string
+  return simplifiedParts.join(" ");
+};
+
+// Function to simplify the radicand
+function simplifyRadicand(n) {
+  // Find the largest perfect square factor of n
+  for (let i = Math.floor(Math.sqrt(n)); i > 1; i--) {
+    if (n % (i * i) === 0) {
+      return [i, n / (i * i)];
+    }
+  }
+  return [1, n]; // If no simplification is possible
+}
 
 export default ProblemSolver;
