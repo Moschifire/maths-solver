@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  background-color: #F7EED3;
+  background-color: #f7eed3;
   width: 40hv;
   margin: 20px auto;
   height: 40vh;
@@ -11,19 +11,20 @@
   padding: 20px;
   box-sizing: border-box;
 }
-h1, h3 {
+h1,
+h3 {
   color: #674636;
 }
-input, textarea {
+input,
+textarea {
   margin: 5px auto;
   display: block;
 }
 button {
-  background-color: #674636; 
-  color: #FFF8E8;
+  background-color: #674636;
+  color: #fff8e8;
   margin: 5px auto;
 }
 form {
   display: block;
-  
 }
