@@ -18,9 +18,9 @@ const ProblemSolver = ({ problemType, input, onSolved }) => {
         case "Simplify Surds":
           solution = simplifySurds(input);
           break;
-        case "Rationalize and Simplify Surds":
+        /* case "Rationalize and Simplify Surds":
           solution = rationalizeAndSimplify(input);
-          break;
+          break; */
         default:
           solution = "Invalid problem type";
       }
@@ -40,7 +40,7 @@ const parseSimultaneousEquations = (input) => {
   const matrixB = [];
 
   equations.forEach((eq, index) => {
-    // Improved regex to handle various formats and coefficients
+    // Regex to handle various formats and coefficients
     const regex =
       /([+-]?\d*\.?\d*)x\s*([+-]?\d*\.?\d*)y\s*=\s*([+-]?\d*\.?\d+)/i;
     const match = eq.match(regex);
@@ -162,6 +162,7 @@ const simplifySurds = (input) => {
   return result || "0"; // If result is empty, return '0'
 };
 
+/*
 const simplifyRadicand = (n) => {
   // Find the largest perfect square factor of n
   for (let i = Math.floor(Math.sqrt(n)); i > 1; i--) {
@@ -173,47 +174,46 @@ const simplifyRadicand = (n) => {
 };
 
 const rationalizeSurd = (input) => {
-  // Step 1: Match and parse the numerator and denominator
-  const match = input.match(/(\d*√?\d*)\/(\(?.*\)?)/);
-  if (!match) return input; // If no match, return the expression as-is
+  // Match for numerator and denominator
+  const match = input.match(/(.+)\/(.+)/);
+  if (!match) return input;
 
-  let numerator = match[1] || "1";
-  const denominator = match[2].replace(/[()]/g, ""); // Remove parentheses if any
+  let numerator = match[1];
+  let denominator = match[2].replace(/[()]/g, ""); // Remove parentheses around the denominator
 
-  // Step 2: Check if the denominator is a simple surd or a binomial expression
+  // Check if denominator is a simple surd (e.g., √a) or a binomial surd (e.g., √a ± √b)
   const simpleSurdMatch = denominator.match(/^√(\d+)$/);
-  const complexSurdMatch = denominator.match(/^(√\d+)([+-])(√\d+)$/);
+  const binomialSurdMatch = denominator.match(/^(√\d+)([+-])(√\d+)$/);
 
   if (simpleSurdMatch) {
-    // Case 1: Denominator is a simple surd (e.g., 1/√2)
+    // Case 1: Simple surd in the denominator
     const radicand = parseInt(simpleSurdMatch[1]);
     const newNumerator = `${numerator}√${radicand}`;
-    const newDenominator = radicand;
+    const newDenominator = radicand; // Rationalize denominator (√a becomes a)
     return `${newNumerator}/${newDenominator}`;
-  } else if (complexSurdMatch) {
-    // Case 2: Denominator is a binomial surd expression (e.g., 1/(√2 + √3))
-    const [_, firstTerm, operator, secondTerm] = complexSurdMatch;
+  } else if (binomialSurdMatch) {
+    // Case 2: Binomial surd in the denominator
+    const [_, firstTerm, operator, secondTerm] = binomialSurdMatch;
     const conjugate =
       operator === "+"
         ? `${firstTerm}-${secondTerm}`
         : `${firstTerm}+${secondTerm}`;
 
-    // Multiply numerator by the conjugate
-    const newNumerator = `${numerator}(${conjugate})`;
+    // Multiply numerator and denominator by the conjugate
+    const newNumerator = `(${numerator})(${conjugate})`;
 
-    // Use difference of squares to simplify denominator
+    // Calculate the denominator using difference of squares (a^2 - b^2)
     const firstRadicand = parseInt(firstTerm.match(/\d+/)[0]);
     const secondRadicand = parseInt(secondTerm.match(/\d+/)[0]);
-    const newDenominator = firstRadicand - secondRadicand;
+    const newDenominator = firstRadicand - secondRadicand; // Difference of squares
 
-    return `${newNumerator}/${newDenominator}`;
+    return `(${newNumerator})/${newDenominator}`;
   }
 
-  // Step 3: Handle more complex cases or return original if not handled
-  return input;
+  return input; // If no surd is detected, return the expression as-is
 };
 
-// Utility function to simplify a term like "2√2 + 3√2"
+// Utility function to simplify surd expressions
 const simplifyExpression = (input) => {
   const parts = input.split(/(?=[+-])/);
   const termMap = {};
@@ -227,7 +227,6 @@ const simplifyExpression = (input) => {
         ? -1
         : 1;
       const radicand = parseInt(match[2]);
-
       termMap[radicand] = (termMap[radicand] || 0) + coefficient;
     } else {
       termMap["constant"] = (termMap["constant"] || 0) + parseInt(part);
@@ -244,10 +243,11 @@ const simplifyExpression = (input) => {
     .replace(/\+ -/g, "- ");
 };
 
-// Rationalize and simplify a complex expression
+// Combine rationalization and simplification
 const rationalizeAndSimplify = (input) => {
   const rationalized = rationalizeSurd(input);
   return simplifyExpression(rationalized);
 };
+*/
 
 export default ProblemSolver;
